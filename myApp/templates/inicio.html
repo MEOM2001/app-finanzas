@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% csrf_token %}
+
+<h1>Bienvenido a la página de inicio</h1>
+{% if user.is_authenticated %}
+    <p>¡Has iniciado sesión como {{ user.username }}!</p>
+{% else %}
+    <p>No has iniciado sesión.</p>
+{% endif %}
+
+{% endblock %}

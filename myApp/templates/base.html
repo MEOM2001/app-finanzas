@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Finanzas</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>    
+                    <a href="/inicio">Inicio</a>
+                </li>
+                <li>    
+                    <a href="/gastosIngresos">Gastos e Ingresos</a>
+                </li>
+                <li>    
+                    <a href="/presupuestos">Presupuestos</a>
+                </li>
+                <li>    
+                    <a href="/cerrarSesion">Cerar Sesion</a>
+                </li>
+            {% else %}
+                <li>    
+                    <a href="/registrarse">Registrarse</a>
+                </li>
+                <li>    
+                    <a href="/">Iniciar Sesion</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
