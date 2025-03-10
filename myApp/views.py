@@ -3,8 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def gastosIngresos(request):
     return render(request, 'gastosIngresos.html')
 
@@ -27,10 +29,12 @@ def iniciarSesion(request):
             return redirect('inicio')
 
 
+@login_required
 def inicio(request):
     return render(request, 'inicio.html')
 
 
+@login_required
 def presupuestos(request):
     return render(request, 'presupuestos.html')
 
@@ -61,6 +65,7 @@ def registrarse(request):
         })
 
 
+@login_required
 def cerrarSesion(request):
     logout(request)
     return redirect('iniciar sesion')
