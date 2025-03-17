@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Perfil</h1>
+<p>Tu nombre de usuario es: {{ user.username }}</p>
+<p>Tu correo es: {{ user.email }}</p>
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>
+        Guardar Cambios
+    </button>
+</form>
+<p>
+    <a href="/cerrarSesion">Cerar Sesion</a>
+</p>
+
+{% endblock %}

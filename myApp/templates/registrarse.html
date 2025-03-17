@@ -4,7 +4,6 @@
 {% block content %}
 <h1>Registrarse</h1>
 
-{{error}}
 
 <form action="/registrarse/" method="POST">
     {% csrf_token %}
@@ -14,5 +13,8 @@
     </button>
 </form>
 
+{% if error %}
+    <p style="color: red;">{{error}}</p>
+{% endif %}
 
 {% endblock %}
