@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Confirmar Eliminación</h2>
+<p>¿Estás seguro de que deseas eliminar esta transacción?</p>
+<p><strong>Tipo:</strong> {{ transaccion.tipo }}</p>
+<p><strong>Cantidad:</strong> {{ transaccion.cantidad }}</p>
+<p><strong>Descripción:</strong> {{ transaccion.descripcion }}</p>
+<p><strong>Fecha:</strong> {{ transaccion.fecha }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="{% url 'lista_transacciones' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

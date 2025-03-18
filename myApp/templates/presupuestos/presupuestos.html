@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Mis Presupuestos</h1>
+<p><a href="/agregar_presupuesto">Añadir</a></p>
+
+<h2>Lista de Presupuestos</h2>
+{% if presupuestos %}
+    <ul>
+    {% for presupuesto in presupuestos %}
+        <li>
+            <strong>{{ presupuesto.nombre }}</strong><br>
+            Descripción: {{ presupuesto.descripcion }}<br>
+            Precio: ${{ presupuesto.precio }}<br>
+            Fecha: {{ presupuesto.fecha }}<br>
+            {% if presupuesto.website %}
+                Website: <a href="{{ presupuesto.website }}" target="_blank">{{ presupuesto.website }}</a><br>
+            {% endif %}
+            <a href="{% url 'editar_presupuesto' presupuesto.id %}">Editar</a>
+            <a href="{% url 'eliminar presupuesto' presupuesto.id %}">Eliminar</a>
+        </li>
+        <hr>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes presupuestos aún.</p>
+{% endif %}
+
+{% endblock %}

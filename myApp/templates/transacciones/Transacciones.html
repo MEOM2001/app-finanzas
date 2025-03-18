@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Lista de Transacciones</h2>
+<a href="{% url 'agregar_transaccion' %}" class="btn btn-primary">Añadir Transacción</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaccion in transacciones %}
+        <tr>
+            <td>{{ transaccion.tipo }}</td>
+            <td>{{ transaccion.cantidad }}</td>
+            <td>{{ transaccion.descripcion }}</td>
+            <td>{{ transaccion.fecha }}</td>
+            <td>
+                <a href="{% url 'editar_transaccion' transaccion.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="{% url 'eliminar_transaccion' transaccion.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

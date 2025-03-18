@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Editar Presupuesto: {{ presupuesto.nombre }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+<p><a href="/presupuestos">Cancelar</a></p>
+
+{% endblock %}

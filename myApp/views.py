@@ -6,6 +6,11 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from .forms import ProfileUpdateForm
+from .models import Transaccion
+from .forms import TransaccionForm
+from django.shortcuts import get_object_or_404
+from .forms import PresupuestoForm
+from .models import Presupuesto
 
 
 def iniciarSesion(request):
@@ -59,11 +64,6 @@ def registrarse(request):
 
 
 @login_required
-def gastosIngresos(request):
-    return render(request, 'gastosIngresos.html')
-
-
-@login_required
 def presupuestos(request):
     return render(request, 'presupuestos.html')
 
@@ -92,3 +92,107 @@ def perfil(request):
     return render(request, 'perfil.html', {
         'form': form
     })
+
+
+@login_required
+def lista_transacciones(request):
+    transacciones = Transaccion.objects.filter(
+        usuario=request.user).order_by('-fecha')
+    return render(request, 'transacciones/Transacciones.html', {'transacciones': transacciones})
+
+
+@login_required
+def agregar_transaccion(request):
+    if request.method == 'POST':
+        form = TransaccionForm(request.POST)
+        if form.is_valid():
+            nueva_transaccion = form.save(commit=False)
+            nueva_transaccion.usuario = request.user
+            nueva_transaccion.save()
+            return redirect('lista_transacciones')
+    else:
+        form = TransaccionForm()
+    return render(request, 'transacciones/Form Transaciones.html', {'form': form})
+
+
+@login_required
+def editar_transaccion(request, transaccion_id):
+    transaccion = get_object_or_404(
+        Transaccion, id=transaccion_id, usuario=request.user)
+    if request.method == 'POST':
+        form = TransaccionForm(request.POST, instance=transaccion)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_transacciones')
+    else:
+        form = TransaccionForm(instance=transaccion)
+    return render(request, 'transacciones/Form Transaciones.html', {'form': form})
+
+
+@login_required
+def eliminar_transaccion(request, transaccion_id):
+    transaccion = get_object_or_404(
+        Transaccion, id=transaccion_id, usuario=request.user)
+    if request.method == 'POST':
+        transaccion.delete()
+        return redirect('lista_transacciones')
+    
+    return render(request, 'transacciones/Eliminar Transacion.html', {'transaccion': transaccion})
+
+
+@login_required
+def presupuestos(request):
+    presupuestos = Presupuesto.objects.filter(usuario=request.user)
+
+    return render(request, 'presupuestos/presupuestos.html', {
+        'presupuestos': presupuestos
+    })
+
+
+@login_required
+def agregar_presupuesto(request):
+    if request.method == 'POST':
+        form = PresupuestoForm(request.POST)
+        if form.is_valid():
+            presupuesto = form.save(commit=False)
+            presupuesto.usuario = request.user
+            presupuesto.save()
+            return redirect('presupuestos')
+    else:
+        form = PresupuestoForm()
+
+    return render(request, 'presupuestos/agregar_presupuesto.html', {
+        'form': form,
+    })
+
+
+@login_required
+def editar_presupuesto(request, presupuesto_id):
+    presupuesto = get_object_or_404(Presupuesto, id=presupuesto_id, usuario=request.user)
+
+    if request.method == 'POST':
+        form = PresupuestoForm(request.POST, instance=presupuesto)
+        if form.is_valid():
+            form.save()
+            return redirect('presupuestos')
+    else:
+        form = PresupuestoForm(instance=presupuesto)
+
+    return render(request, 'presupuestos/editar_presupuesto.html', {
+        'form': form,
+    })
+
+@login_required
+def eliminar_presupuesto(request, presupuesto_id):
+    presupuesto = get_object_or_404(
+        Presupuesto, id=presupuesto_id, usuario=request.user)
+    
+    if request.method == 'POST':
+        presupuesto.delete()
+        return redirect('presupuestos')
+    
+    return render(request, 'presupuestos/eliminar_presupuesto.html', {
+        'presupuesto': presupuesto
+    })
+
+
