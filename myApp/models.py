@@ -1,5 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+
+class Usuarios(AbstractUser):
+    pass
 
 
 class Transaccion(models.Model):
@@ -8,7 +12,7 @@ class Transaccion(models.Model):
         ('gasto', 'Gasto'),
     ]
 
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     descripcion = models.TextField()
@@ -19,7 +23,7 @@ class Transaccion(models.Model):
     
 
 class Presupuesto(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)

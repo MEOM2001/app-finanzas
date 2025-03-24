@@ -3,8 +3,7 @@
 {% block content %}
 
 <h1>Perfil</h1>
-<p>Tu nombre de usuario es: {{ user.username }}</p>
-<p>Tu correo es: {{ user.email }}</p>
+<p>Modifica tus datos:</p>
 <form method="POST">
     {% csrf_token %}
     {{form.as_p}}
@@ -13,7 +12,7 @@
     </button>
 </form>
 <p>
-    <a href="/cerrarSesion">Cerar Sesion</a>
+    <a href="/cerrarSesion">Cerrar Sesión</a>
 </p>
 
 {% endblock %}

@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
@@ -11,25 +10,25 @@ from .forms import TransaccionForm
 from django.shortcuts import get_object_or_404
 from .forms import PresupuestoForm
 from .models import Presupuesto
+from .models import Usuarios
 
 
 def iniciarSesion(request):
     if request.method == 'GET':
         return render(request, 'iniciarSesion.html', {
-            'form': AuthenticationForm
+            'form': AuthenticationForm()
         })
     else:
-        user = authenticate(
+        usuario = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
+        if usuario is None:
             return render(request, 'iniciarSesion.html', {
-                'form': AuthenticationForm,
+                'form': AuthenticationForm(),
                 'error': 'Username or password is incorrect'
             })
         else:
-            login(request, user)
+            login(request, usuario)
             return redirect('inicio')
-
 
 def registrarse(request):
     if request.method == 'GET':
@@ -39,13 +38,15 @@ def registrarse(request):
     else:
         if request.POST['password1'] == request.POST['password2']:
             try:
-                user = User.objects.create_user(
+                usuario = Usuarios.objects.create_user(
                     username=request.POST['username'],
+                    first_name=request.POST['first_name'],
+                    last_name=request.POST['last_name'],
                     email=request.POST['email'],
                     password=request.POST['password1']
                 )
-                user.save()
-                login(request, user)
+                usuario.save()
+                login(request, usuario)
                 return redirect('inicio')
             except IntegrityError:
                 return render(request, 'registrarse.html', {
@@ -62,10 +63,17 @@ def registrarse(request):
             'error': 'Las contraseñas no coinciden'
         })
 
-
-@login_required
-def presupuestos(request):
-    return render(request, 'presupuestos.html')
+# Para cuando queramos validar bien los datos
+# def registrarse(request):
+#     if request.method == 'GET':
+#         return render(request, 'registrarse.html', {'form': CustomUserCreationForm()})
+#     else:
+#         form = CustomUserCreationForm(request.POST)
+#         if form.is_valid():
+#             usuario = form.save()
+#             login(request, usuario)
+#             return redirect('inicio')
+#         return render(request, 'registrarse.html', {'form': form, 'error': 'Error al crear el usuario'})
 
 
 @login_required
@@ -76,7 +84,7 @@ def inicio(request):
 @login_required
 def cerrarSesion(request):
     logout(request)
-    return redirect('iniciar sesion')
+    return redirect('iniciarSesion')
 
 
 @login_required
@@ -136,7 +144,7 @@ def eliminar_transaccion(request, transaccion_id):
     if request.method == 'POST':
         transaccion.delete()
         return redirect('lista_transacciones')
-    
+
     return render(request, 'transacciones/Eliminar Transacion.html', {'transaccion': transaccion})
 
 
@@ -168,7 +176,8 @@ def agregar_presupuesto(request):
 
 @login_required
 def editar_presupuesto(request, presupuesto_id):
-    presupuesto = get_object_or_404(Presupuesto, id=presupuesto_id, usuario=request.user)
+    presupuesto = get_object_or_404(
+        Presupuesto, id=presupuesto_id, usuario=request.user)
 
     if request.method == 'POST':
         form = PresupuestoForm(request.POST, instance=presupuesto)
@@ -182,17 +191,16 @@ def editar_presupuesto(request, presupuesto_id):
         'form': form,
     })
 
+
 @login_required
 def eliminar_presupuesto(request, presupuesto_id):
     presupuesto = get_object_or_404(
         Presupuesto, id=presupuesto_id, usuario=request.user)
-    
+
     if request.method == 'POST':
         presupuesto.delete()
         return redirect('presupuestos')
-    
+
     return render(request, 'presupuestos/eliminar_presupuesto.html', {
         'presupuesto': presupuesto
     })
-
-

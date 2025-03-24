@@ -4,10 +4,10 @@ from myApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.iniciarSesion, name='iniciar sesion'),
+    path('', views.iniciarSesion, name='iniciarSesion'),
     path('inicio/', views.inicio, name='inicio'),
     path('perfil/', views.perfil, name='perfil'),
-    path('cerrarSesion/', views.cerrarSesion, name='cerrar sesion'),
+    path('cerrarSesion/', views.cerrarSesion, name='cerrarSesion'),
     path('registrarse/', views.registrarse, name='registrarse'),
     path('transacciones/', views.lista_transacciones, name='lista_transacciones'),
     path('transacciones/nueva/', views.agregar_transaccion,

@@ -5,7 +5,7 @@
 
 {{error}}
 
-<form action="{% url 'iniciar sesion' %}" method="POST">
+<form action="{% url 'iniciarSesion' %}" method="POST">
     {% csrf_token %}
     {{form.as_p}}
     <button>
