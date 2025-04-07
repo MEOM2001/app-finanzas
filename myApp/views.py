@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from .forms import PresupuestoForm
 from .models import Presupuesto
 from .models import Usuarios
+from django.contrib import messages
 
 
 def iniciarSesion(request):
@@ -117,6 +118,7 @@ def agregar_transaccion(request):
             nueva_transaccion = form.save(commit=False)
             nueva_transaccion.usuario = request.user
             nueva_transaccion.save()
+            messages.success(request, "Transacción añadida correctamente.")
             return redirect('lista_transacciones')
     else:
         form = TransaccionForm()
@@ -131,6 +133,7 @@ def editar_transaccion(request, transaccion_id):
         form = TransaccionForm(request.POST, instance=transaccion)
         if form.is_valid():
             form.save()
+            messages.success(request, "Transacción modificada correctamente.")
             return redirect('lista_transacciones')
     else:
         form = TransaccionForm(instance=transaccion)
@@ -143,6 +146,7 @@ def eliminar_transaccion(request, transaccion_id):
         Transaccion, id=transaccion_id, usuario=request.user)
     if request.method == 'POST':
         transaccion.delete()
+        messages.success(request, "Transacción eliminada correctamente.")
         return redirect('lista_transacciones')
 
     return render(request, 'transacciones/Eliminar Transacion.html', {'transaccion': transaccion})
