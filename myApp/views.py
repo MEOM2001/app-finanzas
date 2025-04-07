@@ -148,6 +148,7 @@ def eliminar_transaccion(request, transaccion_id):
     return render(request, 'transacciones/Eliminar Transacion.html', {'transaccion': transaccion})
 
 
+
 @login_required
 def presupuestos(request):
     presupuestos = Presupuesto.objects.filter(usuario=request.user)

@@ -1,39 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" data-bs-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Finanzas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
 </head>
+
 <body>
     <nav>
         <ul>
-            {% if user.is_authenticated %}
-                <li>    
-                    <a href="/inicio">Inicio</a>
-                </li>
-                <li>    
-                    <a href="/transacciones">Lista de Transacciones</a>
-                </li>
-                <li>    
-                    <a href="/presupuestos">Presupuestos</a>
-                </li>
-                <li>    
-                    <a href="/perfil">Perfil</a>
-                </li>
-            {% else %}
-                <li>    
-                    <a href="/registrarse">Registrarse</a>
-                </li>
-                <li>    
-                    <a href="/">Iniciar Sesion</a>
-                </li>
-            {% endif %}
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container">
+                    <a class="navbar-brand" href="#">Navbar</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/inicio">Inicio</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/transacciones">Transacciones</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/presupuestos">Presupuestos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/perfil">Perfil</a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/registrarse">Registrarse</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Iniciar Sesion</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </ul>
     </nav>
-    
+
     {% block content %}
     {% endblock %}
 
 </body>
+
 </html>
