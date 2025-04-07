@@ -1,30 +1,63 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<h1>Mis Presupuestos</h1>
-<p><a href="/agregar_presupuesto">Añadir</a></p>
+<div class="container text-center">
 
-<h2>Lista de Presupuestos</h2>
-{% if presupuestos %}
-    <ul>
-    {% for presupuesto in presupuestos %}
-        <li>
-            <strong>{{ presupuesto.nombre }}</strong><br>
-            Descripción: {{ presupuesto.descripcion }}<br>
-            Precio: ${{ presupuesto.precio }}<br>
-            Fecha: {{ presupuesto.fecha }}<br>
-            {% if presupuesto.website %}
-                Website: <a href="{{ presupuesto.website }}" target="_blank">{{ presupuesto.website }}</a><br>
-            {% endif %}
-            <a href="{% url 'editar_presupuesto' presupuesto.id %}">Editar</a>
-            <a href="{% url 'eliminar presupuesto' presupuesto.id %}">Eliminar</a>
-        </li>
-        <hr>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No tienes presupuestos aún.</p>
-{% endif %}
+    <div class="row my-4 d-flex align-items-center justify-content-center">
+        <div class="col-auto">
+            <h1>Lista de Presupuestos</h1>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary">
+                <a class="nav-link" href="/agregar_presupuesto">Añadir</a>
+            </button>
+        </div>
+    </div>
+
+    {% if presupuestos %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Fecha</th>
+                    <th>Website</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for presupuesto in presupuestos %}
+                <tr>
+                    <td>{{ presupuesto.nombre }}</td>
+                    <td>{{ presupuesto.descripcion }}</td>
+                    <td>{{ presupuesto.precio }}</td>
+                    <td>{{ presupuesto.fecha }}</td>
+                    <td>
+                        {% if presupuesto.website %}
+                        <a href="{{ presupuesto.website }}" target="_blank">Ver</a><br>
+                        {% else %}
+                        <p>Sin website</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-warning btn-sm my-1">
+                            <a class="nav-link" href="{% url 'editar_presupuesto' presupuesto.id %}">Editar</a>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm">
+                            <a class="nav-link" href="{% url 'eliminar presupuesto' presupuesto.id %}">Eliminar</a>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Aún no has creado ningun presupuesto.</p>
+    {% endif %}
+</div>
 
 {% endblock %}

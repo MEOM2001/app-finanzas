@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{% if form.instance.pk %}Editar{% else %}Añadir{% endif %} Transacción</h2>
-<form method="post">
-    {% csrf_token %}
-    <div class="mb-3">
-        {{ form.as_p }}
-    </div>
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'lista_transacciones' %}" class="btn btn-secondary">Cancelar</a>
-</form>
+
+<div class="container text-center">
+    <h2>{% if form.instance.pk %}Editar{% else %}Añadir{% endif %} Transacción</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3 text-start">
+            {{ form.as_p }}
+        </div>
+
+        <button type="submit" class="btn btn-outline-success">
+            Añadir
+        </button>
+        <button class="btn btn-outline-secondary">
+            <a class="nav-link" href="{% url 'lista_transacciones' %}">Cancelar</a>
+        </button>
+    </form>
+</div>
+
 {% endblock %}

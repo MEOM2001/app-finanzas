@@ -1,22 +1,42 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<h2>Confirmar Eliminación</h2>
+<div class="container text-center">
+    <h2>Confirmar Eliminación</h2>
 
-<div>
-    <p>¿Estás seguro de que deseas eliminar este presupuesto?</p>
-    <p><strong>Nombre:</strong> {{ presupuesto.nombre }}</p>
-    <p><strong>Descripcion:</strong> {{ presupuesto.descripcion }}</p>
-    <p><strong>Precio:</strong> {{ presupuesto.precio }}</p>
-    <p><strong>Fecha:</strong> {{ presupuesto.fecha }}</p>
-    <p><strong>Website:</strong> {{ presupuesto.website }}</p>
+    <div>
+        <p>¿Estás seguro de que deseas eliminar este presupuesto?</p>
+        <ul class="list-group">
+            <li class="list-group-item text-start">
+                <p>
+                    <strong>Nombre:</strong> {{ presupuesto.nombre }}
+                </p>
+                <p>
+                    <strong>Descripcion:</strong> {{ presupuesto.descripcion }}
+                </p>
+                <p>
+                    <strong>Precio:</strong> {{ presupuesto.precio }}
+                </p>
+                <p>
+                    <strong>Fecha:</strong> {{ presupuesto.fecha }}
+                </p>
+                <p>
+                    <strong>Website:</strong> {{ presupuesto.website }}
+                </p>
+            </li>
+        </ul>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger">
+            Eliminar
+        </button>
+        <button class="btn btn-outline-secondary">
+            <a class="nav-link" href="/presupuestos">Cancelar</a>
+        </button>
+    </form>
+
 </div>
-
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <p><a href="/presupuestos" class="btn btn-secondary">Cancelar</a></p>
-</form>
 
 {% endblock %}

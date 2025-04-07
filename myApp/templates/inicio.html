@@ -2,13 +2,15 @@
 
 {% block content %}
 
-{% csrf_token %}
+<div class="container text-center">
+    {% csrf_token %}
 
-<h1>Bienvenido a la página de inicio</h1>
-{% if user.is_authenticated %}
+    <h1>Bienvenido a la página de inicio</h1>
+    {% if user.is_authenticated %}
     <p>¡Hola {{ user.first_name }} {{user.last_name}}!</p>
-{% else %}
+    {% else %}
     <p>No has iniciado sesión.</p>
-{% endif %}
+    {% endif %}
+</div>
 
 {% endblock %}

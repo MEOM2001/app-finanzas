@@ -1,18 +1,25 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<h1>Perfil</h1>
-<p>Modifica tus datos:</p>
-<form method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>
-        Guardar Cambios
-    </button>
-</form>
-<p>
-    <a href="/cerrarSesion">Cerrar Sesión</a>
-</p>
+<div class="container text-center">
+
+    <h1>Perfil</h1>
+
+    <form method="POST">
+        <div class="text-start">
+            <h4>Modifica tus datos:</h4>
+            {% csrf_token %}
+            {{form.as_p}}
+        </div>
+
+        <button class="text-center btn btn-outline-success">
+            Guardar
+        </button>
+        <button class="btn btn-outline-danger m-2">
+            <a class="nav-link" href="/cerrarSesion">Cerrar Sesión</a>
+        </button>
+    </form>
+</div>
+
 
 {% endblock %}

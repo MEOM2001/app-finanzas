@@ -48,6 +48,7 @@ def registrarse(request):
                 )
                 usuario.save()
                 login(request, usuario)
+                messages.success(request, "Registro realizado con exito.")
                 return redirect('inicio')
             except IntegrityError:
                 return render(request, 'registrarse.html', {
@@ -85,6 +86,7 @@ def inicio(request):
 @login_required
 def cerrarSesion(request):
     logout(request)
+    messages.success(request, "Sesion cerrada correctamente.")
     return redirect('iniciarSesion')
 
 
@@ -94,6 +96,7 @@ def perfil(request):
         form = ProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, "Datos actualizados correctamente.")
             return redirect('perfil')
     else:
         form = ProfileUpdateForm(instance=request.user)
@@ -170,6 +173,7 @@ def agregar_presupuesto(request):
             presupuesto = form.save(commit=False)
             presupuesto.usuario = request.user
             presupuesto.save()
+            messages.success(request, "Presupuesto añadido correctamente.")
             return redirect('presupuestos')
     else:
         form = PresupuestoForm()
@@ -188,6 +192,7 @@ def editar_presupuesto(request, presupuesto_id):
         form = PresupuestoForm(request.POST, instance=presupuesto)
         if form.is_valid():
             form.save()
+            messages.success(request, "Presupuesto editado correctamente.")
             return redirect('presupuestos')
     else:
         form = PresupuestoForm(instance=presupuesto)
@@ -204,6 +209,7 @@ def eliminar_presupuesto(request, presupuesto_id):
 
     if request.method == 'POST':
         presupuesto.delete()
+        messages.success(request, "Presupuesto eliminado correctamente.")
         return redirect('presupuestos')
 
     return render(request, 'presupuestos/eliminar_presupuesto.html', {
