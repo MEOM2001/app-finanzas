@@ -1,3 +1,4 @@
+from ast import Import
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -12,6 +13,57 @@ from .forms import PresupuestoForm
 from .models import Presupuesto
 from .models import Usuarios
 from django.contrib import messages
+from django.http.response import JsonResponse
+from django.db.models import Sum
+
+# Vista para renderizar la página de inicio con estadísticas
+@login_required
+def inicio(request):
+    # Obtener el total de ingresos
+    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+
+    # Obtener el total de egresos
+    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='egreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+
+    # Preparar datos para el gráfico de ingresos vs. egresos
+    labels_ingresos_egresos = ['Ingresos', 'Egresos']
+    data_ingresos_egresos = [total_ingresos, total_egresos]
+
+    # Obtener el total de transacciones por tipo
+    transacciones_por_tipo = Transaccion.objects.filter(usuario=request.user).values('tipo').annotate(total=Sum('cantidad'))
+    labels_tipos = [item['tipo'] for item in transacciones_por_tipo]
+    data_tipos = [item['total'] for item in transacciones_por_tipo]
+
+    context = {
+        'total_ingresos': total_ingresos,
+        'total_egresos': total_egresos,
+        'labels_ingresos_egresos': labels_ingresos_egresos,
+        'data_ingresos_egresos': data_ingresos_egresos,
+        'labels_tipos': labels_tipos,
+        'data_tipos': data_tipos,
+    }
+    return render(request, 'inicio.html', context)
+
+# Vista que devuelve los datos para las gráficas en formato JSON
+@login_required
+def get_chart(request):
+    # Sumar ingresos y egresos
+    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='egreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+
+    # Sumar por tipo
+    transacciones_por_tipo = Transaccion.objects.filter(usuario=request.user).values('tipo').annotate(total=Sum('cantidad'))
+    labels_tipos = [item['tipo'] for item in transacciones_por_tipo]
+    data_tipos = [item['total'] for item in transacciones_por_tipo]
+
+    chart = {
+        'labels_ingresos_egresos': ['Ingresos', 'Egresos'],
+        'data_ingresos_egresos': [total_ingresos, total_egresos],
+        'labels_tipos': labels_tipos,
+        'data_tipos': data_tipos,
+    }
+
+    return JsonResponse(chart)
 
 
 def iniciarSesion(request):
@@ -30,6 +82,7 @@ def iniciarSesion(request):
         else:
             login(request, usuario)
             return redirect('inicio')
+
 
 def registrarse(request):
     if request.method == 'GET':
@@ -64,23 +117,6 @@ def registrarse(request):
             'form': CustomUserCreationForm,
             'error': 'Las contraseñas no coinciden'
         })
-
-# Para cuando queramos validar bien los datos
-# def registrarse(request):
-#     if request.method == 'GET':
-#         return render(request, 'registrarse.html', {'form': CustomUserCreationForm()})
-#     else:
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             usuario = form.save()
-#             login(request, usuario)
-#             return redirect('inicio')
-#         return render(request, 'registrarse.html', {'form': form, 'error': 'Error al crear el usuario'})
-
-
-@login_required
-def inicio(request):
-    return render(request, 'inicio.html')
 
 
 @login_required
@@ -153,7 +189,6 @@ def eliminar_transaccion(request, transaccion_id):
         return redirect('lista_transacciones')
 
     return render(request, 'transacciones/Eliminar Transacion.html', {'transaccion': transaccion})
-
 
 
 @login_required
