@@ -3,7 +3,7 @@ services:
     name: app-finanzas
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app_finanzas.wsgi:application
+    startCommand: gunicorn appFinanzas.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: app_finanzas.settings
