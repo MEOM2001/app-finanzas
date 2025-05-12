@@ -8,8 +8,8 @@ class Usuarios(AbstractUser):
 
 class Transaccion(models.Model):
     TIPO_CHOICES = [
-        ('ingreso', 'Ingreso'),
-        ('gasto', 'Gasto'),
+        ('Ingreso', 'Ingreso'),
+        ('Gasto', 'Gasto'),
     ]
 
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
