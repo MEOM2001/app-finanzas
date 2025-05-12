@@ -20,13 +20,13 @@ from django.db.models import Sum
 @login_required
 def inicio(request):
     # Obtener el total de ingresos
-    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='Ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
 
     # Obtener el total de egresos
-    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='egreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='Gasto').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
 
     # Preparar datos para el gráfico de ingresos vs. egresos
-    labels_ingresos_egresos = ['Ingresos', 'Egresos']
+    labels_ingresos_egresos = ['Ingresos', 'Gastos']
     data_ingresos_egresos = [total_ingresos, total_egresos]
 
     # Obtener el total de transacciones por tipo
@@ -48,8 +48,8 @@ def inicio(request):
 @login_required
 def get_chart(request):
     # Sumar ingresos y egresos
-    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
-    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='egreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='Ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='Gasto').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
 
     # Sumar por tipo
     transacciones_por_tipo = Transaccion.objects.filter(usuario=request.user).values('tipo').annotate(total=Sum('cantidad'))
@@ -57,7 +57,7 @@ def get_chart(request):
     data_tipos = [item['total'] for item in transacciones_por_tipo]
 
     chart = {
-        'labels_ingresos_egresos': ['Ingresos', 'Egresos'],
+        'labels_ingresos_egresos': ['Ingresos', 'Gastos'],
         'data_ingresos_egresos': [total_ingresos, total_egresos],
         'labels_tipos': labels_tipos,
         'data_tipos': data_tipos,
