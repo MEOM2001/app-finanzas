@@ -34,13 +34,39 @@ def inicio(request):
     labels_tipos = [item['tipo'] for item in transacciones_por_tipo]
     data_tipos = [item['total'] for item in transacciones_por_tipo]
 
+    # Últimas transacciones
+    latest_transactions = Transaccion.objects.filter(usuario=request.user).order_by('-fecha')[:5]
+
+    # Resumen de presupuestos
+    # Resumen de presupuestos
+    presupuestos = Presupuesto.objects.filter(usuario=request.user)
+    total_presupuestado = presupuestos.aggregate(Sum('precio'))['precio__sum'] or 0
+    total_gastado_real = total_egresos  # Suponiendo que "real" es lo que realmente gastó
+    saldo_actual = total_ingresos - total_egresos
+
+    diferencia_presupuesto = total_presupuestado - total_gastado_real
+
+
+
+    # Color del texto según diferencia
+    if diferencia_presupuesto >= 0:
+        presupuesto_status_color = 'text-success'
+    else:
+        presupuesto_status_color = 'text-danger'
+
     context = {
         'total_ingresos': total_ingresos,
         'total_egresos': total_egresos,
+        'saldo_actual': saldo_actual,
         'labels_ingresos_egresos': labels_ingresos_egresos,
         'data_ingresos_egresos': data_ingresos_egresos,
         'labels_tipos': labels_tipos,
         'data_tipos': data_tipos,
+        'latest_transactions': latest_transactions,
+                'total_presupuestado': total_presupuestado,
+        'total_gastado_real': total_gastado_real,
+        'diferencia_presupuesto': diferencia_presupuesto,
+        'presupuesto_status_color': presupuesto_status_color,
     }
     return render(request, 'inicio.html', context)
 

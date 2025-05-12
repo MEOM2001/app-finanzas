@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% load humanize %}
+
 <div class="container text-center mt-4">
     <h1>Panel de resumen financiero</h1>
 
@@ -12,7 +15,7 @@
                 <div class="card bg-success text-white">
                     <div class="card-body">
                         <h5 class="card-title">Total de ingresos</h5>
-                        <p class="card-text fw-bold">${{ total_ingresos|floatformat:2 }}</p>
+                        <p class="card-text fw-bold">${{ total_ingresos|floatformat:2|intcomma }}</p>
                     </div>
                 </div>
             </div>
@@ -20,7 +23,7 @@
                 <div class="card bg-danger text-white">
                     <div class="card-body">
                         <h5 class="card-title">Total de gastos</h5>
-                        <p class="card-text fw-bold">${{ total_egresos|floatformat:2 }}</p>
+                        <p class="card-text fw-bold">${{ total_egresos|floatformat:2|intcomma }}</p>
                     </div>
                 </div>
             </div>
@@ -28,7 +31,7 @@
                 <div class="card bg-info text-white">
                     <div class="card-body">
                         <h5 class="card-title">Saldo actual</h5>
-                        <p class="card-text fw-bold">${{ saldo_actual|floatformat:2 }}</p>
+                        <p class="card-text fw-bold">${{ saldo_actual|floatformat:2|intcomma }}</p>
                     </div>
                 </div>
             </div>
@@ -43,9 +46,9 @@
                     <div class="card-body">
                         <h5 class="card-title">Resumen de presupuestos</h5>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Total presupuestado: <span class="fw-bold">${{ total_presupuestado|floatformat:2 }}</span></li>
-                            <li class="list-group-item">Total gastado (Real): <span class="fw-bold">${{ total_gastado_real|floatformat:2 }}</span></li>
-                            <li class="list-group-item">Diferencia: <span class="fw-bold {{ presupuesto_status_color }}">${{ diferencia_presupuesto|floatformat:2 }}</span></li>
+                            <li class="list-group-item">Total presupuestado: <span class="fw-bold">${{ total_presupuestado|floatformat:2|intcomma }}</span></li>
+                            <li class="list-group-item">Total gastado (Real): <span class="fw-bold">${{ total_gastado_real|floatformat:2|intcomma }}</span></li>
+                            <li class="list-group-item">Diferencia: <span class="fw-bold {{ presupuesto_status_color }}">${{ diferencia_presupuesto|floatformat:2|intcomma }}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -66,7 +69,7 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         {{ transaction.descripcion }}
                                         <span class="badge rounded-pill {% if transaction.tipo|lower == 'ingreso' %}bg-success{% else %}bg-danger{% endif %}">
-                                            ${{ transaction.monto|floatformat:2 }}
+                                            ${{ transaction.cantidad|floatformat:2|intcomma }}
                                         </span>
                                     </li>
                                 {% endfor %}
