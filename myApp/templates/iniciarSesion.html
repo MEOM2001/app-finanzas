@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container text-center">
+<div class="container text-center my-4" style="max-width: 960px; margin: 0 auto;">
     <h1>Iniciar sesión</h1>
 
     {{error}}
 
     <form action="{% url 'iniciarSesion' %}" method="POST">
         {% csrf_token %}
-        <div class="my-4">
+        <div class="my-4" style="max-width: 650px; margin: 0 auto;">
             {{form.as_p}}
         </div>
         <button class="btn btn-outline-primary">

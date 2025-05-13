@@ -6,7 +6,7 @@
     <h1>Perfíl</h1>
 
     <form method="POST">
-        <div class="text-start">
+        <div class="text-start" style="margin-left: auto; margin-right: auto; width: 70%; text-align: left;">
             <h4>Modifica tus datos:</h4>
             {% csrf_token %}
             {{form.as_p}}

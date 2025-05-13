@@ -15,6 +15,12 @@ from .models import Usuarios
 from django.contrib import messages
 from django.http.response import JsonResponse
 from django.db.models import Sum
+from .forms import CustomAuthenticationForm
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.http import HttpResponse
+import json
+
 
 # Vista para renderizar la página de inicio con estadísticas
 @login_required
@@ -91,23 +97,51 @@ def get_chart(request):
 
     return JsonResponse(chart)
 
+@login_required
+def pdf_resumen(request):
+    total_ingresos = Transaccion.objects.filter(usuario=request.user, tipo='Ingreso').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+    total_egresos = Transaccion.objects.filter(usuario=request.user, tipo='Gasto').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
+
+    transacciones_por_tipo = Transaccion.objects.filter(usuario=request.user).values('tipo').annotate(total=Sum('cantidad'))
+    labels_tipos = [item['tipo'] for item in transacciones_por_tipo]
+    data_tipos = [item['total'] for item in transacciones_por_tipo]
+
+    context = {
+        'total_ingresos': total_ingresos,
+        'total_egresos': total_egresos,
+        'labels_tipos': labels_tipos,
+        'data_tipos': data_tipos,
+    }
+
+    template_path = 'pdf_resumen.html'  # Debes crear este template
+    template = get_template(template_path)
+    html = template.render(context)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="resumen_financiero.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Hubo errores al generar el PDF <pre>' + html + '</pre>')
+    return response
+
+
 
 def iniciarSesion(request):
     if request.method == 'GET':
         return render(request, 'iniciarSesion.html', {
-            'form': AuthenticationForm()
+            'form': CustomAuthenticationForm()
         })
     else:
-        usuario = authenticate(
-            request, username=request.POST['username'], password=request.POST['password'])
-        if usuario is None:
-            return render(request, 'iniciarSesion.html', {
-                'form': AuthenticationForm(),
-                'error': 'Username or password is incorrect'
-            })
-        else:
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            usuario = form.get_user()
             login(request, usuario)
             return redirect('inicio')
+        else:
+            return render(request, 'iniciarSesion.html', {
+                'form': form,
+                'error': 'Nombre de usuario o contraseña incorrectos.'
+            })
 
 
 def registrarse(request):

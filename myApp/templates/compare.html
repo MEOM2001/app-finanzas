@@ -2,8 +2,11 @@
 
 {% block content %}
 
+<<<<<<< HEAD
+=======
 {% load humanize %}
 
+>>>>>>> b5e4207e6cad92a37324f87987621ace94387347
 <div class="container text-center mt-4">
     <h1>Panel de resumen financiero</h1>
 
@@ -11,23 +14,33 @@
         <p class="mt-2">¡Hola {{ user.first_name }} {{ user.last_name }}!</p>
 
         <div class="row mt-4">
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <div class="card bg-success text-white">
                     <div class="card-body">
+<<<<<<< HEAD
+                        <h5 class="card-title">Total de Ingresos</h5>
+                        <p class="card-text fw-bold">${{ total_ingresos|floatformat:2 }}</p>
+=======
                         <h5 class="card-title">Total de ingresos</h5>
                         <p class="card-text fw-bold">${{ total_ingresos|floatformat:2|intcomma }}</p>
+>>>>>>> b5e4207e6cad92a37324f87987621ace94387347
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <div class="card bg-danger text-white">
                     <div class="card-body">
+<<<<<<< HEAD
+                        <h5 class="card-title">Total de Gastos</h5>
+                        <p class="card-text fw-bold">${{ total_egresos_transacciones|floatformat:2 }}</p>
+=======
                         <h5 class="card-title">Total de gastos</h5>
                         <p class="card-text fw-bold">${{ total_egresos|floatformat:2|intcomma }}</p>
+>>>>>>> b5e4207e6cad92a37324f87987621ace94387347
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <div class="card bg-info text-white">
                     <div class="card-body">
                         <h5 class="card-title">Saldo actual</h5>
@@ -38,6 +51,13 @@
         </div>
 
         <div class="row mt-4">
+<<<<<<< HEAD
+            <div class="col-md-12">
+                <div class="card mb-4">
+=======
+            <div class="col-md-8">
+                <canvas id="graficoIngresosEgresos"></canvas>  {# ID corregido aquí #}
+            </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
@@ -50,9 +70,15 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4">
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <canvas id="chartDistribucionGastos"></canvas>
+            </div>
+            <div class="col-md-6">
                 <div class="card">
+>>>>>>> b5e4207e6cad92a37324f87987621ace94387347
                     <div class="card-body">
                         <h5 class="card-title">Últimas transacciones</h5>
                         {% if latest_transactions %}
@@ -69,10 +95,47 @@
                         {% else %}
                             <p>No hay transacciones recientes.</p>
                         {% endif %}
+                        <button class="btn btn-secondary mt-3" onclick="window.location.href='{% url 'generar_pdf_resumen' %}'">Descargar PDF</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumen de Presupuestos</h5>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item">Total Presupuestado: <span class="fw-bold">${{ total_presupuestado|floatformat:2 }}</span></li>
+                            <li class="list-group-item">Total Gastado (Real): <span class="fw-bold">${{ total_gastado_real|floatformat:2 }}</span></li>
+                            <li class="list-group-item">Diferencia: <span class="fw-bold {{ presupuesto_status_color }}">${{ diferencia_presupuesto|floatformat:2 }}</span></li>
+                        </ul>
+                        <canvas id="graficoResumenPresupuestos" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Distribución de Gastos</h5>
+                        <canvas id="chartDistribucionGastos"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ingresos vs Egresos</h5>
+                        <canvas id="graficoIngresosEgresos"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     {% else %}
         <p>No has iniciado sesión.</p>
     {% endif %}
@@ -80,7 +143,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctxIngresosEgresos = document.getElementById('graficoIngresosEgresosBarra').getContext('2d');
+    const ctxIngresosEgresos = document.getElementById('graficoIngresosEgresos').getContext('2d');
     new Chart(ctxIngresosEgresos, {
         type: 'bar',
         data: {
@@ -162,7 +225,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const value = context.raw;
+                            const value = context.formattedValue;
                             return `${context.label}: $${new Intl.NumberFormat('es-CO').format(value)}`;
                         }
                     }
